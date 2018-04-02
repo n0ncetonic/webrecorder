@@ -17,12 +17,8 @@ class CollectionFiltersUI extends Component {
     addPagesToLists: PropTypes.func,
     collection: PropTypes.object,
     dispatch: PropTypes.func,
-    expandAll: PropTypes.bool,
-    groupDisplay: PropTypes.bool,
-    onToggle: PropTypes.func,
     openAddToList: PropTypes.func,
     pages: PropTypes.object,
-    toggleExpandAllSessions: PropTypes.func,
     search: PropTypes.func,
     searchText: PropTypes.string,
     searchPages: PropTypes.func,
@@ -79,19 +75,14 @@ class CollectionFiltersUI extends Component {
   closeAddToList = () => this.setState({ addToListModal: false })
 
   search = (evt) => {
-    const { dispatch, groupDisplay, onToggle, searchPages } = this.props;
-
-    // if in group mode, switch to flat display
-    if(groupDisplay) {
-      onToggle();
-    }
+    const { dispatch, searchPages } = this.props;
 
     dispatch(searchPages(evt.target.value));
   }
 
   render() {
     const { canAdmin, isAnon } = this.context;
-    const { collection, groupDisplay, onToggle } = this.props;
+    const { collection } = this.props;
 
     return (
       <div className="wr-coll-utilities">
@@ -102,20 +93,9 @@ class CollectionFiltersUI extends Component {
                 <Button bsSize="xs" bsStyle="success">New Recording</Button>
               </Link>
           }
-          <div className="toggle-label">
-            <span onClick={onToggle}>Group by session</span>
-            <Toggle
-              checked={groupDisplay}
-              onChange={onToggle}
-              icons={false} />
-          </div>
           {
             !isAnon && canAdmin && this.props.selectedPageIdx !== null &&
               <button className="open-all" onClick={this.openAddToList}>Add selection to lists</button>
-          }
-          {
-            groupDisplay &&
-              <button className="open-all" onClick={this.props.toggleExpandAllSessions}>{this.props.expandAll ? 'Close' : 'Open'} All Sessions</button>
           }
           <Searchbox search={this.search} searchText={this.props.searchText} />
           {

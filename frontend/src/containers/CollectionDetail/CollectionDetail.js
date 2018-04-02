@@ -83,7 +83,6 @@ const mapStateToProps = (outerState) => {
     collection: app.get('collection'),
     browsers: app.get('remoteBrowsers'),
     loaded: reduxAsyncConnect.loaded,
-    recordings: isLoaded ? getOrderedRecordings(app) : null,
     pages: isIndexing ? getOrderedPages(app) : pageFeed,
     list: app.get('list')
   };

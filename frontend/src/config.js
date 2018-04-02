@@ -44,7 +44,8 @@ module.exports = Object.assign({
   defaultListDesc: '*This list doesn\'t yet have a description.*',
   defaultRecordingTitle: 'Recording Session',
   draggableTypes: {
-    PAGE_ITEM: 'pageItem'
+    PAGE_ITEM: 'pageItem',
+    TH: 'tableHeader'
   },
   homepageAnnouncement: '',
   internalApiHost: process.env.INTERNAL_HOST,
