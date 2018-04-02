@@ -63,9 +63,13 @@ class CollectionDetailUI extends Component {
     if (inStorage('columnOrder')) {
       try {
         const columns = JSON.parse(getStorage('columnOrder'));
+
         if (!this.props.match.params.list && columns.includes('remove')) {
           columns.splice(columns.indexOf('remove'), 1);
+        } else if (this.props.match.params.list && !columns.includes('remove')) {
+          columns.unshift('remove');
         }
+
         this.setState({ columns });
       } catch (e) {
         console.log('Wrong `columnOrder` storage value.', e);
