@@ -65,13 +65,6 @@ const headerSource = {
   },
   isDragging(props, monitor) {
     return props.dataKey === monitor.getItem().key;
-  },
-  endDrag(props, monitor) {
-    const { idx, initialIdx } = monitor.getItem();
-
-    if (!monitor.didDrop() && props.order) {
-      props.order(idx, initialIdx);
-    }
   }
 };
 

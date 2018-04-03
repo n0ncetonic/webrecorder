@@ -7,7 +7,7 @@ import { load as loadColl } from 'redux/modules/collection';
 import { load as loadList, removeBookmark, saveSort } from 'redux/modules/list';
 import { isLoaded as isRBLoaded, load as loadRB } from 'redux/modules/remoteBrowsers';
 import { deleteRecording } from 'redux/modules/recordings';
-import { getOrderedPages, getOrderedRecordings, pageSearchResults } from 'redux/selectors';
+import { getOrderedPages, pageSearchResults } from 'redux/selectors';
 
 import CollectionDetailUI from 'components/collection/CollectionDetailUI';
 

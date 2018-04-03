@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import AutoSizer from 'react-virtualized/dist/commonjs/AutoSizer';
 import Column from 'react-virtualized/dist/commonjs/Table/Column';
 import Table from 'react-virtualized/dist/commonjs/Table';
+import { Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
 import { setSort } from 'redux/modules/collection';
@@ -11,6 +12,7 @@ import { getStorage, inStorage, setStorage, range } from 'helpers/utils';
 
 import { CollectionFilters, CollectionHeader } from 'containers';
 
+import Modal from 'components/Modal';
 import { CloseIcon } from 'components/icons';
 
 import 'react-virtualized/styles.css';
@@ -43,11 +45,13 @@ class CollectionDetailUI extends Component {
   constructor(props) {
     super(props);
 
+    this.columns = ['timestamp', 'title', 'url', 'browser', 'session'];
     this.initialState = {
+      columns: ['timestamp', 'title', 'url', 'browser'],
+      headerEditor: false,
       listBookmarks: props.list.get('bookmarks'),
       scrolled: false,
-      selectedPageIdx: null,
-      columns: ['timestamp', 'title', 'url', 'browser']
+      selectedPageIdx: null
     };
 
     const activeList = Boolean(props.match.params.list);
@@ -175,9 +179,10 @@ class CollectionDetailUI extends Component {
     const c = columns.splice(origIndex, 1)[0];
     columns.splice(hoverIndex, 0, c);
     this.setState({ columns });
+    this.saveHeaderState();
   }
 
-  saveCollOrder = () => {
+  saveHeaderState = () => {
     setStorage('columnOrder', JSON.stringify(this.state.columns));
   }
 
@@ -197,7 +202,23 @@ class CollectionDetailUI extends Component {
     }
   }
 
-  handleChange = evt => this.setState({ [evt.target.name]: evt.target.value })
+  toggleHeaderModal = () => {
+    this.setState({ headerEditor: !this.state.headerEditor });
+  }
+
+  toggleColumn = (evt) => {
+    const { columns } = this.state;
+    const idx = columns.indexOf(evt.target.name);
+
+    if (idx !== -1) {
+      columns.splice(idx, 1);
+    } else {
+      columns.push(evt.target.name);
+    }
+
+    this.setState({ columns });
+    this.saveHeaderState();
+  }
 
   customRowRenderer = (props) => {
     const { canAdmin } = this.context;
@@ -241,7 +262,15 @@ class CollectionDetailUI extends Component {
     const objects = activeList ? listBookmarks : pages;
     const objectLabel = activeList ? 'Bookmark' : 'Page';
 
-    this.columnDefs = {
+    const columnDefs = {
+      browser: {
+        width: 150,
+        label: 'remote browser',
+        dataKey: 'browser',
+        key: 'browser',
+        columnData: { browsers },
+        cellRenderer: BrowserRenderer,
+      },
       remove: {
         width: 40,
         dataKey: 'remove',
@@ -252,6 +281,12 @@ class CollectionDetailUI extends Component {
           removeCallback: this.props.removeBookmark
         },
         cellRenderer: RemoveRenderer
+      },
+      session: {
+        label: 'session',
+        dataKey: 'id', // TODO: add recording session to api
+        key: 'session',
+        width: 100
       },
       timestamp: {
         width: 200,
@@ -278,14 +313,6 @@ class CollectionDetailUI extends Component {
         dataKey: 'url',
         key: 'url',
         flexGrow: 1
-      },
-      browser: {
-        width: 150,
-        label: 'remote browser',
-        dataKey: 'browser',
-        key: 'browser',
-        columnData: { browsers },
-        cellRenderer: BrowserRenderer,
       }
     };
 
@@ -314,6 +341,34 @@ class CollectionDetailUI extends Component {
             }
 
             <div className={classNames('wr-coll-detail-table', { 'with-lists': activeList })}>
+              {
+                this.context.canAdmin &&
+                  <React.Fragment>
+                    <Button onClick={this.toggleHeaderModal} className="table-header-menu borderless" bsSize="xs">
+                      {/* TODO: placeholder icon */}
+                      <span style={{ display: 'inline-block', fontWeight: 'bold', transform: 'rotateZ(90deg)' }}>...</span>
+                    </Button>
+                    <Modal
+                      visible={this.state.headerEditor}
+                      closeCb={this.toggleHeaderModal}
+                      dialogClassName="table-header-modal"
+                      header={<h4>Edit Table Columns</h4>}
+                      footer={<Button onClick={this.toggleHeaderModal}>Close</Button>}>
+                      <ul>
+                        {
+                          this.columns.map((coll) => {
+                            return (
+                              <li key={coll}>
+                                <input type="checkbox" onChange={this.toggleColumn} name={coll} id={`add-to-list-${coll}`} checked={this.state.columns.includes(coll) || false} />
+                                <label htmlFor={`add-to-list-${coll}`}>{coll}</label>
+                              </li>
+                            );
+                          })
+                        }
+                      </ul>
+                    </Modal>
+                  </React.Fragment>
+              }
               <AutoSizer>
                 {
                   ({ height, width }) => (
@@ -324,7 +379,7 @@ class CollectionDetailUI extends Component {
                       }
                       height={height}
                       rowCount={objects ? objects.size : 0}
-                      headerHeight={40}
+                      headerHeight={50}
                       rowHeight={40}
                       rowGetter={({ index }) => objects.get(index)}
                       rowClassName={this.testRowHighlight}
@@ -336,7 +391,7 @@ class CollectionDetailUI extends Component {
                       sortDirection={activeList ? null : collection.getIn(['sortBy', 'dir'])}>
                       {
                         this.state.columns.map((c, idx) => {
-                          let props = this.columnDefs[c];
+                          let props = columnDefs[c];
                           let collData = {};
 
                           if (props.hasOwnProperty('columnData')) {

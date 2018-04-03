@@ -95,7 +95,7 @@ class CollectionFiltersUI extends Component {
           }
           {
             !isAnon && canAdmin && this.props.selectedPageIdx !== null &&
-              <button className="open-all" onClick={this.openAddToList}>Add selection to lists</button>
+              <Button bsSize="xs" onClick={this.openAddToList}>Add selection to lists</Button>
           }
           <Searchbox search={this.search} searchText={this.props.searchText} />
           {
