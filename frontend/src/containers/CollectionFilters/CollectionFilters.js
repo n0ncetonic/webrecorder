@@ -14,6 +14,7 @@ const mapStateToProps = (outerState) => {
 
   return {
     collection: app.get('collection'),
+    querying: app.getIn(['pageQuery', 'querying']),
     searchText: getSearchText(outerState)
   };
 };

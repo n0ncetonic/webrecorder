@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Toggle from 'react-toggle';
 import { Link } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
+
+import { QueryBox } from 'containers';
 
 import Modal from 'components/Modal';
 import Searchbox from 'components/Searchbox';
@@ -18,6 +19,7 @@ class CollectionFiltersUI extends Component {
     collection: PropTypes.object,
     dispatch: PropTypes.func,
     openAddToList: PropTypes.func,
+    querying: PropTypes.bool,
     pages: PropTypes.object,
     search: PropTypes.func,
     searchText: PropTypes.string,
@@ -36,7 +38,6 @@ class CollectionFiltersUI extends Component {
       checkedLists: {},
     };
   }
-
 
   addToList = () => {
     const { checkedLists } = this.state;
@@ -97,7 +98,11 @@ class CollectionFiltersUI extends Component {
             !isAnon && canAdmin && this.props.selectedPageIdx !== null &&
               <Button bsSize="xs" onClick={this.openAddToList}>Add selection to lists</Button>
           }
-          <Searchbox search={this.search} searchText={this.props.searchText} />
+          {
+            this.props.querying ?
+              <QueryBox /> :
+              <Searchbox search={this.search} searchText={this.props.searchText} />
+          }
           {
             canAdmin &&
               <Modal
