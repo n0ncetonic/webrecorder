@@ -284,7 +284,7 @@ class CollectionDetailUI extends Component {
       },
       session: {
         label: 'session',
-        dataKey: 'id', // TODO: add recording session to api
+        dataKey: 'recording',
         key: 'session',
         width: 100
       },

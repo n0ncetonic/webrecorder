@@ -38,6 +38,9 @@ module.exports = Object.assign({
   apiPath: '/api/v1',
   appHost: `${hostScheme}://${appHost}`,
   contentHost: `${hostScheme}://${contentHost}`,
+  columnMappings: {
+    'session': 'recording'
+  },
   defaultBookmarkDesc: 'No description provided.',
   defaultCollectionTitle: 'New Collection',
   defaultCollDesc: '*This collection doesn\'t yet have a description.*',

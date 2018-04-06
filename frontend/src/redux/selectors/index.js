@@ -1,6 +1,7 @@
 import { createSelector } from 'reselect';
 import { List } from 'immutable';
 import { getSearchSelectors } from 'redux-search';
+import { columnMappings } from 'config';
 
 import { rts, truncate } from 'helpers/utils';
 
@@ -260,7 +261,8 @@ export const getPageCount = createSelector(
 export const getQueryPages = createSelector(
   [getOrderedPages, getColumn, getQuery],
   (orderedPages, column, query) => {
-    return orderedPages.filter(o => o.get(column) === query);
+    const c = columnMappings.hasOwnProperty(column) ? columnMappings[column] : column;
+    return orderedPages.filter(o => o.get(c) === query);
   }
 );
 
