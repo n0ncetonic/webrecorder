@@ -16,6 +16,10 @@ class QueryBoxUI extends Component {
     updateQuery: PropTypes.func
   };
 
+  componentWillUnmount() {
+    this.props.clear();
+  }
+
   handleInput = (evt) => {
     this.props.updateQuery(evt.target.value);
   }
