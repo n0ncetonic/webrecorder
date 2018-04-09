@@ -24,8 +24,7 @@ class CollectionDetail extends Component {
 
     // TODO move to HOC
   static childContextTypes = {
-    canAdmin: PropTypes.bool,
-    canWrite: PropTypes.bool
+    canAdmin: PropTypes.bool
   };
 
   getChildContext() {
@@ -33,8 +32,7 @@ class CollectionDetail extends Component {
     const username = auth.getIn(['user', 'username']);
 
     return {
-      canAdmin: username === user,
-      canWrite: username === user && !auth.anon
+      canAdmin: username === user
     };
   }
 
