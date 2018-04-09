@@ -16,6 +16,10 @@ class QueryBoxUI extends Component {
     updateQuery: PropTypes.func
   };
 
+  componentDidMount() {
+    this.input.focus();
+  }
+
   componentWillUnmount() {
     this.props.clear();
   }
@@ -30,7 +34,7 @@ class QueryBoxUI extends Component {
     return (
       <InputGroup bsClass="input-group query-box">
         <InputGroup.Addon bsSize="sm">{ `${column}:` }</InputGroup.Addon>
-        <FormControl bsSize="sm" onChange={this.handleInput} value={query} />
+        <FormControl bsSize="sm" onChange={this.handleInput} inputRef={(ref) => { this.input = ref; }} value={query} />
         <InputGroup.Button>
           <Button bsSize="sm" onClick={this.props.clear}><XIcon /></Button>
         </InputGroup.Button>

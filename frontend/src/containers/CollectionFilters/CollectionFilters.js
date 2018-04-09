@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { createSearchAction } from 'redux-search';
 
 import { bulkAddTo } from 'redux/modules/list';
+import { setQueryMode } from 'redux/modules/pageQuery';
 
 import { getSearchText } from 'redux/selectors';
 
@@ -30,6 +31,7 @@ const mapDispatchToProps = (dispatch) => {
       return Promise.all(bookmarkPromises);
     },
     searchPages: createSearchAction('collection.pages'),
+    setPageQuery: coll => dispatch(setQueryMode(true, coll)),
     dispatch
   };
 };

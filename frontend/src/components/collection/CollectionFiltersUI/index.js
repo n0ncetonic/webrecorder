@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
 
+import { columns } from 'config';
+
 import { QueryBox } from 'containers';
 
 import Modal from 'components/Modal';
@@ -27,7 +29,8 @@ class CollectionFiltersUI extends Component {
     selectedPageIdx: PropTypes.oneOfType([
       PropTypes.number,
       PropTypes.array
-    ])
+    ]),
+    setPageQuery: PropTypes.func
   };
 
   constructor(props) {
@@ -76,9 +79,17 @@ class CollectionFiltersUI extends Component {
   closeAddToList = () => this.setState({ addToListModal: false })
 
   search = (evt) => {
-    const { dispatch, searchPages } = this.props;
+    const { dispatch, searchPages, setPageQuery } = this.props;
 
-    dispatch(searchPages(evt.target.value));
+    const queryColumn = columns.find(c => evt.target.value.startsWith(`${c}:`));
+
+    if (queryColumn) {
+      // TODO: issue with batchActions and redux-search
+      dispatch(searchPages(''));
+      dispatch(setPageQuery(queryColumn));
+    } else {
+      dispatch(searchPages(evt.target.value));
+    }
   }
 
   render() {

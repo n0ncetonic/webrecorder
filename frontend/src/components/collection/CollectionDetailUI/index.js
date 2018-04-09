@@ -7,6 +7,8 @@ import Table from 'react-virtualized/dist/commonjs/Table';
 import { Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
+import config from 'config';
+
 import { setSort } from 'redux/modules/collection';
 import { getStorage, inStorage, setStorage, range } from 'helpers/utils';
 
@@ -45,9 +47,9 @@ class CollectionDetailUI extends Component {
   constructor(props) {
     super(props);
 
-    this.columns = ['timestamp', 'title', 'url', 'browser', 'session'];
+    this.columns = config.columns;
     this.initialState = {
-      columns: ['timestamp', 'title', 'url', 'browser'],
+      columns: config.defaultColumns,
       headerEditor: false,
       listBookmarks: props.list.get('bookmarks'),
       scrolled: false,
