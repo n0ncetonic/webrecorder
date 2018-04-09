@@ -39,7 +39,6 @@ class ListItem extends PureComponent {
     collection: PropTypes.object,
     connectDropTarget: PropTypes.func,
     editList: PropTypes.func,
-    editVisibility: PropTypes.bool,
     id: PropTypes.string,
     isOver: PropTypes.bool,
     list: PropTypes.object,
@@ -53,7 +52,7 @@ class ListItem extends PureComponent {
 
   render() {
     const { canAdmin } = this.context;
-    const { collection, connectDropTarget, editVisibility, isOver, list, selected } = this.props;
+    const { collection, connectDropTarget, isOver, list, selected } = this.props;
 
     const classes = classNames({ selected, targeted: isOver });
     const isPublic = list.get('public') === '1';
@@ -66,7 +65,7 @@ class ListItem extends PureComponent {
             <span>{ list.get('title') }</span>
           </Link>
           {
-            canAdmin && editVisibility &&
+            canAdmin &&
               <button onClick={this._editVisibility} className={classNames('visiblity-toggle', { public: isPublic })} />
           }
         </div>

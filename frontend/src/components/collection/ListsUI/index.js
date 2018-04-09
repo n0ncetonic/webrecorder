@@ -40,7 +40,6 @@ class ListsUI extends Component {
 
     this.state = {
       editModal: false,
-      editVisibility: false,
       title: '',
       isCreating: false,
       created: false,
@@ -97,40 +96,23 @@ class ListsUI extends Component {
   }
 
   clearInput = () => this.setState({ title: '' })
-  openEditModal = () => { this.setState({ editModal: true }); }
-  closeEditModal = () => { this.setState({ editModal: false }); }
 
-  visiblityToggle = (evt) => {
+  openEditModal = (evt) => {
     evt.stopPropagation();
-    this.setState({ editVisibility: !this.state.editVisibility });
+    this.setState({ editModal: true });
   }
 
+  closeEditModal = () => { this.setState({ editModal: false }); }
+
   render() {
-    const { canAdmin, isAnon } = this.context;
+    const { canAdmin } = this.context;
     const { activeListId, collection, list, lists } = this.props;
-    const { created, editVisibility, editModal, isCreating, title, edited, editId } = this.state;
+    const { created, editModal, isCreating, title, edited, editId } = this.state;
 
     // wait until collection is loaded
     if (!collection.get('loaded')) {
       return null;
     }
-
-    const collapsibleHeader = (
-      <header className="lists-header">
-        <div>
-          <span className="glyphicon glyphicon-triangle-right" />
-          <h4>Lists</h4>
-        </div>
-        {
-          canAdmin &&
-            <button onClick={this.visiblityToggle} className="button-link list-edit">
-              {
-                editVisibility ? 'SET' : 'EDIT VISIBILITY'
-              }
-            </button>
-        }
-      </header>
-    );
 
     return (
       <React.Fragment>
@@ -143,26 +125,26 @@ class ListsUI extends Component {
           }
 
           <div className="lists-body">
-            <Collapsible
-              lazyRender
-              open
-              easing="ease-out"
-              trigger={collapsibleHeader}>
-              <ul>
-                {
-                  lists.map(listObj => (
-                    <ListItem
-                      addToList={this.props.addToList}
-                      collection={collection}
-                      editList={this.sendEditList}
-                      editVisibility={editVisibility}
-                      key={listObj.get('id')}
-                      list={listObj}
-                      selected={list && listObj.get('id') === activeListId} />
-                  ))
-                }
-              </ul>
-            </Collapsible>
+            <header className="lists-header">
+              <h4>Lists</h4>
+              {
+                canAdmin &&
+                  <button onClick={this.openEditModal} className="button-link list-edit">EDIT</button>
+              }
+            </header>
+            <ul>
+              {
+                lists.map(listObj => (
+                  <ListItem
+                    addToList={this.props.addToList}
+                    collection={collection}
+                    editList={this.sendEditList}
+                    key={listObj.get('id')}
+                    list={listObj}
+                    selected={list && listObj.get('id') === activeListId} />
+                ))
+              }
+            </ul>
 
             {
               canAdmin &&

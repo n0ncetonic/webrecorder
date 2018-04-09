@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { addTo, create, deleteList, edit, load as loadList } from 'redux/modules/list';
+import { addTo, create, deleteList, edit, resetEditState } from 'redux/modules/list';
 import { loadLists } from 'redux/modules/collection';
 
 import ListsUI from 'components/collection/ListsUI';
@@ -29,7 +29,8 @@ const mapDispatchToProps = (dispatch) => {
     addToList: (user, coll, listId, data) => dispatch(addTo(user, coll, listId, data)),
     editList: (user, coll, id, data) => {
       return dispatch(edit(user, coll, id, data))
-               .then(() => dispatch(loadLists(user, coll)));
+               .then(() => dispatch(loadLists(user, coll)))
+               .then(() => setTimeout(() => dispatch(resetEditState()), 3000));
     },
     deleteList: (user, coll, id) => {
       return dispatch(deleteList(user, coll, id))
