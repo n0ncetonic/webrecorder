@@ -40,6 +40,7 @@ class ListsUI extends Component {
 
     this.state = {
       editModal: false,
+      editVisibility: false,
       title: '',
       isCreating: false,
       created: false,
@@ -96,13 +97,18 @@ class ListsUI extends Component {
   }
 
   clearInput = () => this.setState({ title: '' })
-  openEditModal = (evt) => { evt.stopPropagation(); this.setState({ editModal: true }); }
+  openEditModal = () => { this.setState({ editModal: true }); }
   closeEditModal = () => { this.setState({ editModal: false }); }
+
+  visiblityToggle = (evt) => {
+    evt.stopPropagation();
+    this.setState({ editVisibility: !this.state.editVisibility });
+  }
 
   render() {
     const { canAdmin, isAnon } = this.context;
     const { activeListId, collection, list, lists } = this.props;
-    const { created, editModal, isCreating, title, edited, editId } = this.state;
+    const { created, editVisibility, editModal, isCreating, title, edited, editId } = this.state;
 
     // wait until collection is loaded
     if (!collection.get('loaded')) {
@@ -117,7 +123,11 @@ class ListsUI extends Component {
         </div>
         {
           canAdmin &&
-            <button onClick={this.openEditModal} className="button-link list-edit">EDIT</button>
+            <button onClick={this.visiblityToggle} className="button-link list-edit">
+              {
+                editVisibility ? 'SET' : 'EDIT VISIBILITY'
+              }
+            </button>
         }
       </header>
     );
@@ -142,11 +152,13 @@ class ListsUI extends Component {
                 {
                   lists.map(listObj => (
                     <ListItem
-                      key={listObj.get('id')}
-                      selected={list && listObj.get('id') === activeListId}
-                      list={listObj}
+                      addToList={this.props.addToList}
                       collection={collection}
-                      addToList={this.props.addToList} />
+                      editList={this.sendEditList}
+                      editVisibility={editVisibility}
+                      key={listObj.get('id')}
+                      list={listObj}
+                      selected={list && listObj.get('id') === activeListId} />
                   ))
                 }
               </ul>
@@ -154,7 +166,7 @@ class ListsUI extends Component {
 
             {
               canAdmin &&
-                <button onClick={this.openEditModal}>+ new list</button>
+                <Button onClick={this.openEditModal}>Manage Lists</Button>
             }
           </div>
         </div>

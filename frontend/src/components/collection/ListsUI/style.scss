@@ -78,6 +78,18 @@
                     }
                 }
 
+                .visiblity-toggle {
+                    content: ' ';
+                    width: 1.5rem;
+                    height: 1.5rem;
+                    border-radius: 50%;
+                    background: none;
+
+                    &.public {
+                        background: $brightGreen;
+                    }
+                }
+
                 &.selected {
                     .wrapper {
                         background-color: $dark-gray;
