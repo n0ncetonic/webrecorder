@@ -26,6 +26,7 @@ class ListsUI extends Component {
     collection: PropTypes.object,
     createList: PropTypes.func,
     deleteList: PropTypes.func,
+    editColl: PropTypes.func,
     editList: PropTypes.func,
     getLists: PropTypes.func,
     loaded: PropTypes.bool,
@@ -140,6 +141,7 @@ class ListsUI extends Component {
                   <ListItem
                     addToList={this.props.addToList}
                     collection={collection}
+                    editColl={this.props.editColl}
                     editList={this.sendEditList}
                     key={listObj.get('id')}
                     list={listObj}

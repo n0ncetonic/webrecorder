@@ -38,6 +38,7 @@ class ListItem extends PureComponent {
     addToList: PropTypes.func,
     collection: PropTypes.object,
     connectDropTarget: PropTypes.func,
+    editColl: PropTypes.func,
     editList: PropTypes.func,
     id: PropTypes.string,
     isOver: PropTypes.bool,
@@ -45,9 +46,14 @@ class ListItem extends PureComponent {
     selected: PropTypes.bool
   };
 
-  _editVisibility = () => {
-    const { list } = this.props;
-    this.props.editList(list.get('id'), { public: list.get('public') === '1' ? '0' : '1' });
+  setFeaturedList = () => {
+    const { collection, list } = this.props;
+    this.props.editColl(collection.get('user'), collection.get('id'), { featured_list: list.get('id') });
+  }
+
+  editVisibility = () => {
+    const { collection, list } = this.props;
+    this.props.editList(collection.get('user'), collection.get('id'), list.get('id'), { public: !(list.get('public') === '1') });
   }
 
   render() {
@@ -63,7 +69,9 @@ class ListItem extends PureComponent {
         <div className="wrapper">
           {
             canAdmin &&
-              <button className={classNames('feature-list borderless', { featured: false })}>
+              <button
+                onClick={this.setFeaturedList}
+                className={classNames('feature-list borderless', { featured: collection.get('featured_list') === list.get('id') })}>
                 <FlagIcon />
               </button>
           }
@@ -74,7 +82,7 @@ class ListItem extends PureComponent {
             canAdmin &&
               <button
                 aria-label={isPublic ? `set list '${title}' public` : `set list '${title}' private`}
-                onClick={this._editVisibility}
+                onClick={this.editVisibility}
                 className={classNames('visiblity-toggle', { public: isPublic })}
                 title="Toggle list visibility" />
           }
