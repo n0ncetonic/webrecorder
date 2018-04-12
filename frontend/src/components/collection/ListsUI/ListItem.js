@@ -6,7 +6,7 @@ import { DropTarget } from 'react-dnd';
 
 import { draggableTypes } from 'config';
 
-import { BrowserIcon } from 'components/icons';
+import { FlagIcon } from 'components/icons';
 
 
 const listTarget = {
@@ -56,17 +56,27 @@ class ListItem extends PureComponent {
 
     const classes = classNames({ selected, targeted: isOver });
     const isPublic = list.get('public') === '1';
+    const title = list.get('title');
 
     return connectDropTarget(
       <li className={classes} key={list.get('id')}>
         <div className="wrapper">
-          <BrowserIcon />
-          <Link to={`/${collection.get('user')}/${collection.get('id')}/list/${list.get('id')}`}>
+          {
+            canAdmin &&
+              <button className={classNames('feature-list borderless', { featured: false })}>
+                <FlagIcon />
+              </button>
+          }
+          <Link to={`/${collection.get('user')}/${collection.get('id')}/list/${list.get('id')}`} title={list.get('title')}>
             <span>{ list.get('title') }</span>
           </Link>
           {
             canAdmin &&
-              <button onClick={this._editVisibility} className={classNames('visiblity-toggle', { public: isPublic })} />
+              <button
+                aria-label={isPublic ? `set list '${title}' public` : `set list '${title}' private`}
+                onClick={this._editVisibility}
+                className={classNames('visiblity-toggle', { public: isPublic })}
+                title="Toggle list visibility" />
           }
         </div>
       </li>

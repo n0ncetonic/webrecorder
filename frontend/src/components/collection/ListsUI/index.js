@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Collapsible from 'react-collapsible';
 import classNames from 'classnames';
 import { Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
@@ -126,10 +125,13 @@ class ListsUI extends Component {
 
           <div className="lists-body">
             <header className="lists-header">
-              <h4>Lists</h4>
+              <h4>Lists ({lists.size})</h4>
               {
                 canAdmin &&
-                  <button onClick={this.openEditModal} className="button-link list-edit">EDIT</button>
+                  <React.Fragment>
+                    <button onClick={this.openEditModal} className="button-link list-edit">EDIT</button>
+                    <button onClick={this.openEditModal} className="borderless"><PlusIcon /></button>
+                  </React.Fragment>
               }
             </header>
             <ul>
@@ -145,11 +147,6 @@ class ListsUI extends Component {
                 ))
               }
             </ul>
-
-            {
-              canAdmin &&
-                <Button onClick={this.openEditModal}>Manage Lists</Button>
-            }
           </div>
         </div>
 
